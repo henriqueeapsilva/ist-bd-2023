@@ -171,14 +171,14 @@ def supplier_register():
                 error = "TIN is required to be atmost 20 characters long."
 
         name = request.form["name"]
-        if name:
+        if name is not NULL:
             if not name.isalnum():
                 error = "Name is required to be alphanumeric."
             elif len(name) > 200:
                 error = "Name is required to be atmost 200 characters long."
 
         address = request.form["address"]
-        if address:
+        if address is not NULL:
             if len(address) > 255:
                 error = "Address is required to be atmost 255 characters long."
 
@@ -191,7 +191,7 @@ def supplier_register():
                 error = "SKU is required to be atmost 25 characters long."
         
         date = request.form["date"]
-        if date:
+        if date is not NULL:
             if len(date) != 10:
                 error = "Date is required to be a valid date in format YYYY-MM-DD."
             if int(date[0:4]) < 0 or date[4] != "-" or date[5:7] not in range(1,13) or date[7] != "-" or date[8:10] not in (1,32):
@@ -252,7 +252,7 @@ def product_update(product_sku):
         error = None
         
         price = request.form["price"]
-        if price:
+        if price is not NULL:
             if not price.isnumeric():
                 error = "Price is required to be numeric."
         
@@ -266,7 +266,7 @@ def product_update(product_sku):
         else:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=namedtuple_row) as cur:
-                    if price:
+                    if price is not NULL:
                         cur.execute(
                             """
                             UPDATE product
@@ -275,7 +275,7 @@ def product_update(product_sku):
                             """,
                             {"product_sku": product_sku, "price": price},
                         )
-                    if desc:
+                    if desc is not NULL:
                         cur.execute(
                             """
                             UPDATE product
@@ -336,12 +336,12 @@ def customer_register():
                 error = "Email is required to be atmost 254 characters long."
         
         phone = request.form["phone"]
-        if phone:
+        if phone is not NULL:
             if len(phone) > 15:
                 error = "Phone is required to be atmost 15 characters long."
         
         address = request.form["address"]
-        if address:
+        if address is not NULL:
             if len(address) > 255:
                 error = "Address is required to be atmost 255 characters long."
 
