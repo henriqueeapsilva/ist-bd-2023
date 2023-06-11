@@ -7,9 +7,9 @@
 {% block content %}
 <header>
     <div class="main-menu">
-        <h3 class="button">Products</h3>
-        <h3 class="button">Customers</h3>
-        <h3 class="button">Orders</h3>
+        <a class="button" href="{{ url_for('products_index') }}">Products</a>
+        <a class="button">Customers</a>
+        <a class="button">Orders</a>
     </div>
 </header>
 {% endblock %}

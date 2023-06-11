@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    {% for p in product %}
+    {% for p in products %}
         <article class="post">
             <header>
                 <div>
                     <h1>{{ p['SKU'] }}</h1>
-                    <div class="about">in {{ p['name'] }}</div>
+                    <div class="about">{{ p['name'] }}</div>
                 </div>
                 <a class="action"> Edit</a>
             </header>
