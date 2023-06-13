@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block content %}
-    {% for o in orders %}
+    {% for order in orders %}
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ o['order_no'] }}</h1>
-                    <div class="about">in {{ c['cust_no'] }}</div>
+                    <h1>Order #{{ order['order_no'] }}</h1>
+                    <div class="about">Customer Number: {{ order['cust_no'] }}</div>
                 </div>
                 <a class="action"> Edit</a>
             </header>
-            <p class="body">Date: {{ c['date'] }}</p>
+            <p class="body">Date: {{ order['date'] }}</p>
             
         </article>
         {% if not loop.last %}

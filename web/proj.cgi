@@ -323,7 +323,6 @@ def customer_index():
                 FROM customer
                 ORDER BY cust_no ASC;
                 """,
-                {},
             ).fetchall()
 
     return render_template("customers/index.html", customers=customers)
@@ -427,7 +426,7 @@ def customer_delete(cust_no):
                 """,
                 {"cust_no": cust_no},
             )
-        conn.commit()
+            conn.commit()
     return redirect(url_for("customer_index"))
 
 
@@ -443,7 +442,6 @@ def orders_index():
                 FROM orders
                 ORDER BY order_no ASC;
                 """,
-                {},
             ).fetchall()
 
     return render_template("orders/index.html", orders=orders)
@@ -455,13 +453,13 @@ def place_order():
 
     if request.method == "POST":
         error = None
-        
+
         cust_no = request.form["cust_no"]
         if not cust_no:
             error = "Customer number is required."
             if not cust_no.isnumeric():
                 error = "Customer number is required to be an integer."
-        
+
         date = request.form["date"]
         if date is not None:
             if len(date) != 10:
@@ -492,6 +490,7 @@ def place_order():
 
     return render_template("orders/register.html")
 
+
 @app.route("/customers/<cust_no>/update", methods=("GET", ))
 def customer_info(cust_no):
     """Show customer information."""
@@ -509,6 +508,7 @@ def customer_info(cust_no):
             log.debug(f"Found {cur.rowcount} rows.")
 
     return render_template("customers/update.html", customer=customer)
+
 
 @app.route("/suppliers/<tin>/update", methods=("GET", ))
 def supplier_info(tin):
