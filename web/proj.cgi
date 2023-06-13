@@ -145,6 +145,20 @@ def product_delete(product_sku):
         with conn.cursor(row_factory=namedtuple_row) as cur:
             cur.execute(
                 """
+                UPDATE supplier SET SKU = NULL
+                WHERE SKU = %(product_sku)s;
+                """,
+                {"product_sku": product_sku},
+            )
+            cur.execute(
+                """
+                DELETE FROM contains
+                WHERE SKU = %(product_sku)s;
+                """,
+                {"product_sku": product_sku},
+            )
+            cur.execute(
+                """
                 DELETE FROM product
                 WHERE SKU = %(product_sku)s;
                 """,
