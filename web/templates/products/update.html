@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Product {{ product['name'] }} | Edit{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="price"> Price</label>
+    <input name="price" id="price" type="number" value="{{ request.form['price'] or product['price'] }}" disabled>
+    <label for="desciption"> Description</label>
+    <input name="description" id="description" type="text" value="{{ request.form['description'] or product['description'] }}" disabled>
+  </form>
+  <form action="{{ url_for('product_delete', product_sku=product['sku'])}}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}

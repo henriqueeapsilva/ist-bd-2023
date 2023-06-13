@@ -238,7 +238,7 @@ def product_update(product_sku):
     
     with pool.connection() as conn:
         with conn.cursor(row_factory=namedtuple_row) as cur:
-            account = cur.execute(
+            product = cur.execute(
                 """
                 SELECT SKU, name, description, price
                 FROM product
