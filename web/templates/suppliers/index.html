@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block content %}
-    {% for s in supplier %}
+    {% for supplier in suppliers %}
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ s['TIN'] }}</h1>
-                    <div class="about">Name: {{ s['name'] }}</div>
+                    <h1>{{ supplier['tin'] }}</h1>
+                    <div class="about">Name: {{ supplier['name'] }}</div>
                 </div>
                 <a class="action"> Edit</a>
             </header>
-            <p class="body">Product: {{ s['SKU'] }}</p>
+            <p class="body">Product: {{ supplier['sku'] }}</p>
         </article>
         {% if not loop.last %}
             <hr>

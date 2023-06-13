@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block content %}
-    {% for c in customer %}
+    {% for customer in customers %}
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ c['cust_no'] }}</h1>
-                    <div class="about">Name: {{ c['name'] }}</div>
+                    <h1>{{ customer['cust_no'] }}</h1>
+                    <div class="about">Name: {{ customer['name'] }}</div>
                 </div>
                 <a class="action"> Edit</a>
             </header>
-            <p class="body">Email: {{ c['email'] }}</p>
+            <p class="body">Email: {{ customer['email'] }}</p>
             
         </article>
         {% if not loop.last %}

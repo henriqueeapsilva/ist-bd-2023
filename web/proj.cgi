@@ -42,7 +42,6 @@ dictConfig(
 app = Flask(__name__)
 log = app.logger
 
-
 @app.route("/", methods=("GET",))
 def homepage():
     try:
@@ -59,7 +58,7 @@ def product_index():
         with conn.cursor(row_factory=namedtuple_row) as cur:
             products = cur.execute(
                 """
-                SELECT SKU, name, description, price, COALESCE(EAN, '-')
+                SELECT SKU, name, description, price, COALESCE(EAN, 0)
                 FROM product
                 ORDER BY SKU ASC;
                 """,
@@ -298,7 +297,7 @@ def customer_index():
         with conn.cursor(row_factory=namedtuple_row) as cur:
             customers = cur.execute(
                 """
-                SELECT cust_no, name, email, COALESCE(price, '-'), COALESCE(address, '-')
+                SELECT cust_no, name, email, phone, address
                 FROM customer
                 ORDER BY cust_no ASC;
                 """,

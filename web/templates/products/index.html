@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block content %}
-    {% for p in products %}
+    {% for product in products %}
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ p['SKU'] }}</h1>
-                    <div class="about">{{ p['name'] }}</div>
+                    <h1>{{ product['SKU'] }}</h1>
+                    <div class="about">{{ product['name'] }}</div>
                 </div>
-                <a class="action"> Edit</a>
+                <a class="action" href="{{ url_for('product_update', product_sku=product['sku']) }}"> Edit</a>
             </header>
-            <p class="body">{{ p['price'] }} euros </p>
+            <p class="body">{{ product['price'] }} euros </p>
         </article>
         {% if not loop.last %}
             <hr>
