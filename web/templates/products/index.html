@@ -14,7 +14,7 @@
                 </div>
                 <a class="action" href="{{ url_for('product_update', product_sku=product['sku']) }}"> Edit</a>
             </header>
-            <p class="body">{{ product['price'] }} euros </p>
+            <p class="body">{{ product['price'] }} € </p>
         </article>
         {% if not loop.last %}
             <hr>

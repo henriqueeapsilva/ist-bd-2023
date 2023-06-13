@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Supplier {{ supplier['name'] }} | Edit{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <label for="tin"> TIN</label>
+  <input name="tin" id="tin" type="number" value="{{ request.form['tin'] or supplier['tin'] }}" disabled>
+  <label for="name"> Name</label>
+  <input name="name" id="name" type="text" value="{{ request.form['name'] or supplier['name'] }}" disabled>
+  <label for="address"> Address</label>
+  <input name="address" id="address" type="text" value="{{ request.form['address'] or supplier['address'] }}" disabled>
+  <label for="sku"> SKU</label>
+  <input name="sku" id="sku" type="number" value="{{ request.form['sku'] or supplier['sku'] }}" disabled>
+  <label for="date"> Date</label>
+  <input name="date" id="date" type="date" value="{{ request.form['date'] or supplier['date'] }}" disabled>
+</form>
+  <hr>
+  <form action="{{ url_for('supplier_delete', supplier_tin=supplier['tin'])}}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}

@@ -9,10 +9,10 @@
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ customer['cust_no'] }}</h1>
-                    <div class="about">Name: {{ customer['name'] }}</div>
+                    <h1>{{ customer['name'] }}</h1>
+                    <div class="about">Customer Number: {{ customer['cust_no'] }}</div>
                 </div>
-                <a class="action"> Edit</a>
+                <a class="action" href="{{ url_for('customer_info', cust_no=customer['cust_no']) }}"> Edit</a>
             </header>
             <p class="body">Email: {{ customer['email'] }}</p>
             

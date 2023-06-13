@@ -9,10 +9,10 @@
         <article class="post">
             <header>
                 <div>
-                    <h1>{{ supplier['tin'] }}</h1>
-                    <div class="about">Name: {{ supplier['name'] }}</div>
+                    <h1>{{ supplier['name'] }}</h1>
+                    <div class="about">TIN: {{ supplier['tin'] }}</div>
                 </div>
-                <a class="action"> Edit</a>
+                <a class="action" href="{{ url_for('supplier_info', tin=supplier['tin']) }}"> Edit</a>
             </header>
             <p class="body">Product: {{ supplier['sku'] }}</p>
         </article>

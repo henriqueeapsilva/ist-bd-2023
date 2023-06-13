@@ -7,10 +7,12 @@
 {% block content %}
   <form method="post">
     <label for="price"> Price</label>
-    <input name="price" id="price" type="number" value="{{ request.form['price'] or product['price'] }}" disabled>
+    <input name="price" id="price" type="number" min="0.00" step="0.01" placeholder="0.00" value="{{ request.form['price'] or product['price'] }}" required>
     <label for="desciption"> Description</label>
-    <input name="description" id="description" type="text" value="{{ request.form['description'] or product['description'] }}" disabled>
+    <input name="description" id="description" type="text" value="{{ request.form['description'] or product['description'] }}" enabled>
+    <input type="submit" value="Save">
   </form>
+  <hr>
   <form action="{{ url_for('product_delete', product_sku=product['sku'])}}" method="post">
     <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
   </form>

@@ -492,6 +492,42 @@ def place_order():
 
     return render_template("orders/register.html")
 
+@app.route("/customers/<cust_no>/update", methods=("GET", ))
+def customer_info(cust_no):
+    """Show customer information."""
+
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            customer = cur.execute(
+                """
+                SELECT cust_no, name, email, phone, address
+                FROM customer
+                WHERE cust_no = %(cust_no)s;
+                """,
+                {"cust_no": cust_no},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    return render_template("customers/update.html", customer=customer)
+
+@app.route("/suppliers/<tin>/update", methods=("GET", ))
+def supplier_info(tin):
+    """Show supplier information."""
+
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            supplier = cur.execute(
+                """
+                SELECT TIN, name, address, SKU, date
+                FROM supplier
+                WHERE TIN = %(tin)s;
+                """,
+                {"tin": tin},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    return render_template("suppliers/update.html", supplier=supplier)
+
 
 if __name__ == "__main__":
     app.run()
