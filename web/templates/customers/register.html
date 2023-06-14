@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Customer | Register{% endblock %}</h1>
+  <div class="main">
+    <button onclick="history.back()" class="top-left"> Back</button>
+</div>  
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="cust_no">Customer Number</label>
+    <input name="cust_no" id="cust_no" type="number" value="" required>
+    <label for="name">Name</label>
+    <input name="name" id="name" type="text" value="" required>
+    <label for="email">Email</label>
+    <input name="email" id="email" type="text" value="" required>
+    <label for="phone">Phone</label>
+    <input name="phone" id="phone" type="numeric" max="999999999" value="" enabled>
+    <label for="address">Address</label>
+    <input name="address" id="address" type="text" enabled>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

@@ -4,7 +4,7 @@
   <h2>{% block title %}Customers{% endblock %}</h2>
 <div class="main">
     <button onclick="history.back()" class="top-left"> Back</button>
-    <button onclick="history.back()" class="top-right"> Register Customer</button>
+    <button onclick="window.location.href='{{ url_for('customer_register') }}';" class="top-right"> Register Customer</button>
 </div>  
 {% endblock %}
 
