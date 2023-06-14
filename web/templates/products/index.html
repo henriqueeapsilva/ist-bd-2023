@@ -2,11 +2,10 @@
 
 {% block header %}
   <h2>{% block title %}Products{% endblock %}</h2>
-  <div class="main">
-      <button onclick="history.back()" class="top-left"> Back</button>
-    <button onclick="window.location.href='{{ url_for('product_register') }}';" class="top-right"> Register Product</button>
-      
-    </div>
+<div class="main">
+    <button onclick="history.back()" class="top-left"> Back</button>
+    <button onclick="window.location.href='{{ url_for('product_register') }}'" class="top-right"> Register Product</button>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +18,7 @@
                 </div>
                 <a class="action" href="{{ url_for('product_update', product_sku=product['sku']) }}"> Edit</a>
             </header>
-            <p class="body">{{ product['price'] }} € </p>
+            <p class="body">Price: {{ product['price'] }} € </p>
         </article>
         {% if not loop.last %}
             <hr>
