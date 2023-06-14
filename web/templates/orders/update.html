@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Order {{ order['order_no'] }} | Edit{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <label for="order_no"> Order number</label>
+  <input name="order_no" id="order_no" type="number" value="{{ request.form['order_no'] or order['order_no'] }}" disabled>
+  <label for="cust_no"> Customer number</label>
+  <input name="cust_no" id="cust_no" type="number" value="{{ request.form['cust_no'] or order['cust_no'] }}" disabled>
+  <label for="date"> Date</label>
+  <input name="date" id="date" type="date" value="{{ request.form['date'] or order['date'] }}" disabled>
+</form>
+  <hr>
+<h3 style="color: black"> Products: </h3>
+    {% for product in products %}
+        <label for="name"> Name</label>
+        <input style="margin-right:9%" name="name" id="name" type="text" value="{{ product['name'] }}" disabled>
+        <label for="SKU"> SKU</label>
+        <input style="margin-right:9%" name="SKU" id="SKU" type="text" value="{{ product['sku'] }}" disabled>
+        <label for="qty"> Quantity</label>
+        <input style="margin-right:9%" name="qty" id="qty" type="number" value="{{ product['qty'] }}" disabled>
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
