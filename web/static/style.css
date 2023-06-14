@@ -187,10 +187,12 @@ button{
   bottom: 45%; } 
 .bottom-left{
   bottom: 0%; 
-  left: 0%; } 
+  left: 0%; 
+    width: 20%; background-color: #377ba8; color: #ffffff; border-radius: 5px;} 
 .bottom-center{ 
   bottom: 0%; 
-  left: 50%; transform: translate(-50%); } 
+  left: 50%; transform: translate(-50%); 
+  width: 20%; background-color: green; color: #ffffff; border-radius: 5px;} 
 .bottom-right{ 
   bottom: 0%; 
   right: 0%; }
