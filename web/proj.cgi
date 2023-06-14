@@ -107,6 +107,18 @@ def product_register():
         else:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=namedtuple_row) as cur:
+                    exists = cur.execute(
+                        """
+                        SELECT COUNT(*) as exists
+                        FROM product
+                        WHERE SKU = %(SKU)s;
+                        """,
+                        {"SKU": SKU},
+                    ).fetchone()
+                    if exists["exists"] == 1:
+                        error = "There is already a product with that SKU."
+                        flash(error)
+                        return redirect(url_for("product_register"))
                     cur.execute(
                         """
                         INSERT INTO product VALUES (%(SKU)s, %(name)s, %(desc)s, 
