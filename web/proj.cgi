@@ -653,24 +653,34 @@ def pay_order(order_no):
             if payment_method not in ("MBWay", "Multibanco", "Paypal", "Visa"):
                 error = "Payment method is required to be one of those listed."
 
+        cust_no_pay = request.form["cust_no_pay"]
+        if not cust_no_pay:
+            error = "The number of the customer who is going to pay is required."
+            if not cust_no_pay.isnumeric():
+                error = "Customer number is required to be an integer."
+
         if error is not None:
             flash(error)
         else:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=namedtuple_row) as cur:
-                    cust_no = cur.execute(
+                    cust_no_order = cur.execute(
                         """
                         SELECT cust_no FROM orders
                         WHERE order_no = %(order_no)s;
                         """,
                         {"order_no": order_no},
                     ).fetchone()
-                    cur.execute(
-                        """
-                        INSERT INTO pay VALUES (%(order_no)s, %(cust_no)s);
-                        """,
-                        {"order_no": order_no, "cust_no": cust_no['cust_no']},
-                    )
+                    if cust_no_order["cust_no"] == cust_no_pay:
+                        cur.execute(
+                            """
+                            INSERT INTO pay VALUES (%(order_no)s, %(cust_no)s);
+                            """,
+                            {"order_no": order_no, "cust_no": cust_no_pay},
+                        )
+                    else:
+                        error = "An order must be payed by the client who placed it."
+                        flash(error)
                 conn.commit()
             return redirect(url_for("order_info"))
 
