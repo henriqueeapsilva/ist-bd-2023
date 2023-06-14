@@ -157,3 +157,40 @@ input[type=submit] {
     transition-duration: 0.3s;
     border-radius: 12px;
 }
+.main {
+  height: 30px; position: 
+  relative;
+    margin-bottom: 10px;
+} 
+button{ 
+  position: absolute; 
+  font-weight: bold; width: 10%; 
+  height: 90%;
+
+} 
+.top-left { 
+  top: 0%; 
+  left: 0%; } 
+.top-center{ 
+  top: 0%; left: 50%; 
+  transform: translate(-50%); } 
+.top-right{ 
+  top: 0%; right: 0%; width: 20%; background-color: #377ba8; color: #ffffff; border-radius: 5px; } 
+.center-left{ 
+  top: 50%; transform: 
+  translateY(-50%); } 
+.center-center{ 
+  top: 50%; left: 50%; 
+  transform: translate(-50%, -50%); } 
+.center-right{ 
+  right: 0%; 
+  bottom: 45%; } 
+.bottom-left{
+  bottom: 0%; 
+  left: 0%; } 
+.bottom-center{ 
+  bottom: 0%; 
+  left: 50%; transform: translate(-50%); } 
+.bottom-right{ 
+  bottom: 0%; 
+  right: 0%; }

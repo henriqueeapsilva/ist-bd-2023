@@ -2,6 +2,9 @@
 
 {% block header %}
   <h1>{% block title %}Order {{ order['order_no'] }} | Edit{% endblock %}</h1>
+<div class="main">
+    <button onclick="history.back()" class="top-left"> Back</button>
+</div>  
 {% endblock %}
 
 {% block content %}
@@ -17,11 +20,11 @@
 <h3 style="color: black"> Products: </h3>
     {% for product in products %}
         <label for="name"> Name</label>
-        <input style="margin-right:9%" name="name" id="name" type="text" value="{{ product['name'] }}" disabled>
+        <input style="margin-right:50px" name="name" id="name" type="text" value="{{ product['name'] }}" disabled>
         <label for="SKU"> SKU</label>
-        <input style="margin-right:9%" name="SKU" id="SKU" type="text" value="{{ product['sku'] }}" disabled>
+        <input style="margin-right:50px" name="SKU" id="SKU" type="text" value="{{ product['sku'] }}" disabled>
         <label for="qty"> Quantity</label>
-        <input style="margin-right:9%" name="qty" id="qty" type="number" value="{{ product['qty'] }}" disabled>
+        <input style="margin-right:50px" name="qty" id="qty" type="number" value="{{ product['qty'] }}" disabled>
         {% if not loop.last %}
             <hr>
         {% endif %}
