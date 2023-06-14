@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Product {{ product['name'] }} | Edit{% endblock %}</h1>
 <div class="main">
-    <button onclick="history.back()" class="top-left"> Back</button>
+    <button onclick="window.location.href='{{ url_for('product_index') }}'" class="top-left"> Back</button>
 </div>
 {% endblock %}
 

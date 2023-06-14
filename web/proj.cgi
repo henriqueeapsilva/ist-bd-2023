@@ -90,9 +90,7 @@ def product_register():
         if not SKU:
             error = "SKU is required."
         else:
-            if not SKU.isalnum():
-                error = "SKU is required to be alphanumeric."
-            elif len(SKU) > 25:
+            if len(SKU) > 25:
                 error = "SKU is required to be atmost 25 characters long."
 
         name = request.form["name"]
@@ -116,6 +114,11 @@ def product_register():
         EAN = request.form["EAN"]
         if EAN == "":
             EAN = 0
+        if EAN is not None:
+            if not EAN.isnumeric():
+                error = "EAN is required to be numeric."
+            elif len(EAN) > 13:
+                error = "EAN is required to be atmost 13 digits long."
 
         if error is not None:
             flash(error)
@@ -124,7 +127,7 @@ def product_register():
                 with conn.cursor(row_factory=namedtuple_row) as cur:
                     sku_exists = cur.execute(
                         """
-                        SELECT COUNT(*) as exists
+                        SELECT COUNT(*) as sku_exists
                         FROM product
                         WHERE SKU = %(SKU)s;
                         """,
@@ -132,7 +135,7 @@ def product_register():
                     ).fetchone()
                     ean_exists = cur.execute(
                         """
-                        SELECT COUNT(*) as exists
+                        SELECT COUNT(*) as ean_exists
                         FROM product
                         WHERE ean = %(ean)s;
                         """,
@@ -278,16 +281,13 @@ def supplier_register():
         TIN = request.form["TIN"]
         if not TIN:
             error = "TIN is required."
-            if not TIN.isalnum():
-                error = "TIN is required to be alphanumeric."
-            elif len(TIN) > 20:
+        else:
+            if len(TIN) > 20:
                 error = "TIN is required to be atmost 20 characters long."
 
         name = request.form["name"]
         if name is not None:
-            if not name.isalnum():
-                error = "Name is required to be alphanumeric."
-            elif len(name) > 200:
+            if len(name) > 200:
                 error = "Name is required to be atmost 200 characters long."
 
         address = request.form["address"]
@@ -298,23 +298,41 @@ def supplier_register():
         SKU = request.form["SKU"]
         if not SKU:
             error = "SKU is required."
-            if not SKU.isalnum():
-                error = "SKU is required to be alphanumeric."
-            elif len(SKU) > 25:
+        else:
+            if len(SKU) > 25:
                 error = "SKU is required to be atmost 25 characters long."
 
         date = request.form["date"]
-        if date is not None:
-            if len(date) != 10:
-                error = "Date is required to be a valid date in format YYYY-MM-DD."
-            if int(date[0:4]) < 0 or date[4] != "-" or date[5:7] not in range(1,13) or date[7] != "-" or date[8:10] not in (1,32):
-                error = "Date is required to be a valid date in format YYYY-MM-DD."
 
         if error is not None:
             flash(error)
         else:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=namedtuple_row) as cur:
+                    tin_exists = cur.execute(
+                        """
+                        SELECT COUNT(*) as tin_exists
+                        FROM supplier
+                        WHERE TIN = %(TIN)s;
+                        """,
+                        {"TIN": TIN},
+                    ).fetchone()
+                    sku_exists = cur.execute(
+                        """
+                        SELECT COUNT(*) as sku_exists
+                        FROM product
+                        WHERE SKU = %(SKU)s;
+                        """,
+                        {"SKU": SKU},
+                    ).fetchone()
+                    if tin_exists[0] == 1:
+                        error = "There is already a supplier with that TIN."
+                        flash(error)
+                        return redirect(url_for("supplier_register"))
+                    if sku_exists[0] == 0:
+                        error = "There isn't a product with that SKU."
+                        flash(error)
+                        return redirect(url_for("supplier_register"))
                     cur.execute(
                         """
                         INSERT INTO supplier VALUES (%(TIN)s, %(name)s, %(address)s, 
@@ -395,12 +413,6 @@ def customer_register():
     if request.method == "POST":
         error = None
 
-        cust_no = request.form["cust_no"]
-        if not cust_no:
-            error = "Customer number is required."
-            if not cust_no.isnumeric():
-                error = "Customer number is required to be an integer."
-
         name = request.form["name"]
         if not name:
             error = "Name is required."
@@ -430,12 +442,31 @@ def customer_register():
         else:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=namedtuple_row) as cur:
+                    max_cust_no = cur.execute(
+                        """
+                        SELECT cust_no FROM customer
+                        WHERE cust_no >= ALL(
+                            SELECT cust_no FROM customer);
+                        """,
+                    ).fetchone()
+                    email_exists = cur.execute(
+                        """
+                        SELECT COUNT(*) as email_exists
+                        FROM customer
+                        WHERE email = %(email)s;
+                        """,
+                        {"email": email},
+                    ).fetchone()
+                    if email_exists[0] == 1:
+                        error = "There is already a customer with that email."
+                        flash(error)
+                        return redirect(url_for("customer_register"))
                     cur.execute(
                         """
                         INSERT INTO customer VALUES (%(cust_no)s, %(name)s, %(email)s, 
                             %(phone)s, %(address)s);
                         """,
-                        {"cust_no": cust_no, "name": name, "email": email, "phone": phone, "address": address},
+                        {"cust_no": max_cust_no[0]+1, "name": name, "email": email, "phone": phone, "address": address},
                     )
                 conn.commit()
             return redirect(url_for("customer_index"))
@@ -583,7 +614,7 @@ def place_order():
                         """
                         INSERT INTO contains VALUES (%(new_order_no)s, %(sku)s, %(qty)s);
                         """,
-                        {"new_order_no": max_order_no['order_no']+1, "sku": first_sku, "qty": qty},
+                        {"new_order_no": max_order_no[0]+1, "sku": first_sku, "qty": qty},
                     )
                 conn.commit()
             return redirect(url_for("orders_index"))

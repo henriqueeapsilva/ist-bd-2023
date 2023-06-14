@@ -3,20 +3,20 @@
 {% block header %}
   <h1>{% block title %}Supplier | Register{% endblock %}</h1>
   <div class="main">
-    <button onclick="history.back()" class="top-left"> Back</button>
+    <button onclick="window.location.href='{{ url_for('supplier_index') }}'" class="top-left"> Back</button>
 </div>  
 {% endblock %}
 
 {% block content %}
   <form method="post">
-    <label for="TIN">Tax Identification Number</label>
-    <input name="TIN" id="TIN" type="number" min="0" placeholder="000000000" value="" required>
+    <label for="TIN">Tax Identification Number (TIN)</label>
+    <input name="TIN" id="TIN" type="text" value="" required>
     <label for="name">Name</label>
     <input name="name" id="name" type="text" value="" enabled>
     <label for="address">Address</label>
     <input name="address" id="address" type="text" enabled>
     <label for="SKU">SKU</label>
-    <input name="SKU" id="SKU" type="numeric" value="" enabled>
+    <input name="SKU" id="SKU" type="text" value="" enabled>
     <label for="date">Date</label>
     <input name="date" id="date" type="date" enabled>
     <input type="submit" value="Save">

@@ -3,7 +3,7 @@
 {% block header %}
   <h2>{% block title %}Suppliers{% endblock %}</h2>
 <div class="main">
-    <button onclick="history.back()" class="top-left"> Back</button>
+    <button onclick="window.location.href='{{ url_for('homepage') }}'" class="top-left"> Back</button>
     <button onclick="window.location.href='{{ url_for('supplier_register') }}';" class="top-right"> Register Supplier</button>
 </div>  
 {% endblock %}
@@ -18,7 +18,7 @@
                 </div>
                 <a class="action" href="{{ url_for('supplier_info', tin=supplier['tin']) }}"> Edit</a>
             </header>
-            <p class="body">Product: {{ supplier['sku'] }}</p>
+            <p class="body">Product SKU: {{ supplier['sku'] }}</p>
         </article>
         {% if not loop.last %}
             <hr>

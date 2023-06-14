@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Order {{ order['order_no'] }} | Edit{% endblock %}</h1>
 <div class="main">
-    <button onclick="history.back()" class="top-left"> Back</button>
+    <button onclick="window.location.href='{{ url_for('orders_index') }}'" class="top-left"> Back</button>
     <button onclick="window.location.href='{{ url_for('pay_order', order_no = order['order_no']) }}'" class="top-right"> Pay Order</button>
 </div>  
 {% endblock %}
