@@ -39,7 +39,17 @@ dictConfig(
     }
 )
 
+
+def is_price(value):
+    size = len(value)
+    for i in range(size):
+        if not value[i].isdigit() and value[i] not in ('.', ','):
+            return False
+    return True
+
+
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 log = app.logger
 
 
@@ -79,6 +89,7 @@ def product_register():
         SKU = request.form["SKU"]
         if not SKU:
             error = "SKU is required."
+        else:
             if not SKU.isalnum():
                 error = "SKU is required to be alphanumeric."
             elif len(SKU) > 25:
@@ -87,9 +98,8 @@ def product_register():
         name = request.form["name"]
         if not name:
             error = "Name is required."
-            if not name.isalnum():
-                error = "Name is required to be alphanumeric."
-            elif len(name) > 200:
+        else:
+            if len(name) > 200:
                 error = "Name is required to be atmost 200 characters long."
 
         desc = request.form["description"]
@@ -97,19 +107,22 @@ def product_register():
         price = request.form["price"]
         if not price:
             error = "Price is required."
-            if not price.isnumeric():
-                error = "Price is required to be numeric."
+        else:
+            if not is_price(price):
+                error = "Price isn't valid."
+            elif len(price) > 11:
+                error = "Price must have atmost 10 digits."
 
         EAN = request.form["EAN"]
         if EAN == "":
-            EAN = None
+            EAN = 0
 
         if error is not None:
             flash(error)
         else:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=namedtuple_row) as cur:
-                    exists = cur.execute(
+                    sku_exists = cur.execute(
                         """
                         SELECT COUNT(*) as exists
                         FROM product
@@ -117,8 +130,20 @@ def product_register():
                         """,
                         {"SKU": SKU},
                     ).fetchone()
-                    if exists[0] == 1:
+                    ean_exists = cur.execute(
+                        """
+                        SELECT COUNT(*) as exists
+                        FROM product
+                        WHERE ean = %(ean)s;
+                        """,
+                        {"ean": EAN},
+                    ).fetchone()
+                    if sku_exists[0] == 1:
                         error = "There is already a product with that SKU."
+                        flash(error)
+                        return redirect(url_for("product_register"))
+                    if ean_exists[0] == 1:
+                        error = "There is already a product with that ean."
                         flash(error)
                         return redirect(url_for("product_register"))
                     cur.execute(
@@ -186,8 +211,10 @@ def product_update(product_sku):
 
         price = request.form["price"]
         if price is not None:
-            if not price.isnumeric():
-                error = "Price is required to be numeric."
+            if not is_price(price):
+                error = "Price isn't valid."
+            elif len(price) > 11:
+                error = "Price must have atmost 10 digits."
 
         desc = request.form["description"]
 
@@ -619,8 +646,8 @@ def order_info(order_no):
             log.debug(f"Found {cur.rowcount} rows.")
             products = cur.execute(
                 """
-                SELECT order_no, SKU, qty
-                FROM contains
+                SELECT order_no, SKU, qty, name
+                FROM contains JOIN product USING (SKU)
                 WHERE order_no = %(order_no)s;
                 """,
                 {"order_no": order_no},
