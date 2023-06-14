@@ -101,6 +101,8 @@ def product_register():
                 error = "Price is required to be numeric."
 
         EAN = request.form["EAN"]
+        if EAN == "":
+            EAN = None
 
         if error is not None:
             flash(error)
@@ -115,7 +117,7 @@ def product_register():
                         """,
                         {"SKU": SKU},
                     ).fetchone()
-                    if exists["exists"] == 1:
+                    if exists[0] == 1:
                         error = "There is already a product with that SKU."
                         flash(error)
                         return redirect(url_for("product_register"))
