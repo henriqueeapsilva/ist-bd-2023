@@ -3,8 +3,7 @@
 {% block header %}
   <h2>{% block title %}Pay Order{% endblock %}</h2>
 <div class="main">
-    <button onclick="window.location.href='{{ url_for('order_info', order_no = order['order_no']) }}'" class="top-right"> Pay Order</button>
-
+    <button onclick="window.location.href='{{ url_for('order_info', order_no=order_no) }}'" class="top-left"> Back</button>
 </div>  
 {% endblock %}
 
