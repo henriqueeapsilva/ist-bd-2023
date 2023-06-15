@@ -743,7 +743,7 @@ def pay_order(order_no):
                         """,
                         {"order_no": order_no},
                     ).fetchone()
-                    if cust_no_order[0] == cust_no_pay:
+                    if cust_no_order["cust_no"] == cust_no_pay:
                         cur.execute(
                             """
                             INSERT INTO pay VALUES (%(order_no)s, %(cust_no)s);
@@ -756,7 +756,7 @@ def pay_order(order_no):
                 conn.commit()
             return redirect(url_for("order_info"))
 
-    return render_template("orders/pay.html", order_totals=order_totals, order_no=order_no)
+    return render_template("orders/pay.html", order_totals=order_totals)
 
 
 if __name__ == "__main__":

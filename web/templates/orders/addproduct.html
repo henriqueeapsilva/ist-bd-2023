@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Add Product | Register{% endblock %}</h1>
+  <div class="main">
+    <button onclick="window.location.href='{{ url_for('orders_index') }}'" class="top-left"> Back</button>
+</div>  
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="SKU">SKU</label>
+    <input name="SKU" id="SKU" type="text" value="" required>
+    <label for="name">Name</label>
+    <input name="name" id="name" type="text" value="" required>
+    <label for="description">Description</label>
+    <input name="description" id="description" type="text" value="" enabled>
+    <label for="price">Price</label>
+    <input name="price" id="price" type="numeric" min="0" step="0.01" placeholder="0.00" value="" required>
+    <label for="EAN">EAN</label>
+    <input name="EAN" id="EAN" type="numeric" placeholder="0000000000000" enabled>
+    <input type="submit" value="Save" style="background-color: green; color:white;">
+  </form>
+{% endblock %}

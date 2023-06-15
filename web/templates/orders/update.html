@@ -31,7 +31,7 @@
         {% endif %}
     {% endfor %}
   <div class="main">
-    <button onclick="history.back()" class="bottom-center"> Add product</button>
+    <button onclick="window.location.href='{{ url_for('add_product', order_no = order['order_no']) }}'" class="bottom-center"> Add product</button>
 </div>  
 
 {% endblock %}

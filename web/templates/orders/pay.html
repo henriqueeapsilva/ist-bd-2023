@@ -3,7 +3,7 @@
 {% block header %}
   <h2>{% block title %}Pay Order{% endblock %}</h2>
 <div class="main">
-    <button onclick="window.location.href='{{ url_for('order_info', order_no=order_no) }}'" class="top-left"> Back</button>
+    <button onclick="window.location.href='{{ url_for('orders_index') }}'" class="top-left"> Back</button>
 </div>  
 {% endblock %}
 
@@ -20,9 +20,6 @@
     <input style="margin-right:50px" name="name" id="name" type="text" value="{{ request.form['payment_method'] }}" required>
     <label for="Total Products"> Customer Number</label>
     <input style="margin-right:50px" name="name" id="name" type="numeric" value="{{ request.form['cust_no_pay'] }}"required>
+    <input type="submit" value="Pay Now" style="background-color: green; color:white; display: block; margin: 0 auto; width: 200px; height: 40px;">
 </form> 
-<div class="main">
-    <button onclick="history.back()" class="bottom-center"> Pay Now</button>
-
-</div> 
 {% endblock %}
