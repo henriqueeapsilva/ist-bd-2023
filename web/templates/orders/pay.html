@@ -3,23 +3,25 @@
 {% block header %}
   <h2>{% block title %}Pay Order{% endblock %}</h2>
 <div class="main">
-    <button onclick="window.location.href='{{ url_for('orders_index') }}'" class="top-left"> Back</button>
+    <button onclick="window.location.href='{{ url_for('order_info', order_no=order_no) }}'" class="top-left"> Back</button>
 </div>  
 {% endblock %}
 
 {% block content %}
 <form method="post">  
-    <label for="Total Products"> Quantity</label>
-    <input style="margin-right:50px" name="name" id="name" type="text" value="{{ order_totals['total_products'] }}" disabled>
-    <label for="Total Products"> Price</label>
-    <input style="margin-right:50px" name="name" id="name" type="numeric" value="{{ order_totals['total_price'] }}" disabled>
+    <label for="Total number of products"> Total number of products</label>
+    <input style="margin-right:50px" name="tnp" id="tnp" type="text" value="{{ order_totals['total_products'] }}" disabled>
+    <label for="Total quantity"> Total quantity</label>
+    <input style="margin-right:50px" name="total_qty" id="total_qty" type="numeric" value="{{ order_totals['total_qty'] }}" disabled>
+    <label for="Total price"> Total price</label>
+    <input style="margin-right:50px" name="total_price" id="total_price" type="numeric" value="{{ order_totals['total_price'] }}" disabled>
 </form> 
 <hr>
 <form method="post">  
-    <label for="Total Products"> Payment method (MBWay, Multibanco, Paypal, Visa)</label>
-    <input style="margin-right:50px" name="name" id="name" type="text" value="{{ request.form['payment_method'] }}" required>
-    <label for="Total Products"> Customer Number</label>
-    <input style="margin-right:50px" name="name" id="name" type="numeric" value="{{ request.form['cust_no_pay'] }}"required>
+    <label for="Payment method"> Payment Method (MBWay, Multibanco, Paypal, Visa)</label>
+    <input style="margin-right:50px" name="payment_method" id="payment_method" type="text" value="{{ request.form['payment_method'] }}" required>
+    <label for="Customer Number"> Customer Number</label>
+    <input style="margin-right:50px" name="cust_no_pay" id="cust_no_pay" type="numeric" value="{{ request.form['cust_no_pay'] }}"required>
     <input type="submit" value="Pay Now" style="background-color: green; color:white; display: block; margin: 0 auto; width: 200px; height: 40px;">
 </form> 
 {% endblock %}

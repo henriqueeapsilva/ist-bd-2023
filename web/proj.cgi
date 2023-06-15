@@ -567,30 +567,27 @@ def place_order():
         cust_no = request.form["cust_no"]
         if not cust_no:
             error = "Customer number is required."
-            if not cust_no.isnumeric():
+        else:
+            if not cust_no.isnumeric() or int:
                 error = "Customer number is required to be an integer."
 
         date = request.form["date"]
         if not date:
             error = "Date is required."
-            if len(date) != 10:
-                error = "Date is required to be a valid date in format YYYY-MM-DD."
-            if int(date[0:4]) < 0 or date[4] != "-" or date[5:7] not in range(1,13) or date[7] != "-" or date[8:10] not in (1,32):
-                error = "Date is required to be a valid date in format YYYY-MM-DD."
 
         first_sku = request.form["sku"]
         if not first_sku:
             error = "New order is required to have atleast one product."
-            if not first_sku.isalnum():
-                error = "SKU is required to be alphanumeric."
-            elif len(first_sku) > 25:
+        else:
+            if len(first_sku) > 25:
                 error = "SKU is required to be atmost 25 characters long."
 
         qty = request.form["qty"]
         if not qty:
             error = "Quantity is required."
-            if not qty.isnumeric():
-                error = "Quantity is required to be numeric."
+        else:
+            if not qty.isnumeric() or int(qty) <= 0:
+                error = "Quantity is required to be a positive integer."
 
         if error is not None:
             flash(error)
@@ -604,11 +601,35 @@ def place_order():
                             SELECT order_no FROM orders);
                         """,
                     ).fetchone()
+                    client_exists = cur.execute(
+                        """
+                        SELECT COUNT(*) as client_exists
+                        FROM customer
+                        WHERE cust_no = %(cust_no)s;
+                        """,
+                        {"cust_no": cust_no},
+                    ).fetchone()
+                    product_exists = cur.execute(
+                        """
+                        SELECT COUNT(*) as product_exists
+                        FROM product
+                        WHERE SKU = %(sku)s;
+                        """,
+                        {"sku": first_sku},
+                    ).fetchone()
+                    if client_exists[0] == 0:
+                        error = "There isn't a customer with that number."
+                        flash(error)
+                        return redirect(url_for("place_order"))
+                    if product_exists[0] == 0:
+                        error = "There isn't a product with that SKU."
+                        flash(error)
+                        return redirect(url_for("place_order"))
                     cur.execute(
                         """
                         INSERT INTO orders VALUES (%(new_order_no)s, %(cust_no)s, %(date)s);
                         """,
-                        {"new_order_no": max_order_no['order_no']+1, "cust_no": cust_no, "date": date},
+                        {"new_order_no": max_order_no[0]+1, "cust_no": cust_no, "date": date},
                     )
                     cur.execute(
                         """
@@ -626,38 +647,84 @@ def place_order():
 def add_product(order_no):
     """Add a new product to an existing order."""
 
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=namedtuple_row) as cur:
+            payed = cur.execute(
+                """
+                SELECT COUNT(*) as payed
+                FROM pay
+                WHERE order_no = %(order_no)s;
+                """,
+                {"order_no": order_no},
+            ).fetchone()
+            log.debug(f"Found {cur.rowcount} rows.")
+
+    if payed[0] == 1:
+        error = "Cannot add products to an order that is already payed."
+        flash(error)
+        return redirect(url_for("order_info", order_no=order_no))
+
     if request.method == "POST":
         error = None
 
         sku = request.form["sku"]
         if not sku:
             error = "Product SKU is required."
-            if not sku.isalnum():
-                error = "SKU is required to be alphanumeric."
-            elif len(sku) > 25:
+        else:
+            if len(sku) > 25:
                 error = "SKU is required to be atmost 25 characters long."
 
         qty = request.form["qty"]
         if not qty:
             error = "Quantity is required."
-            if not qty.isnumeric():
-                error = "Quantity is required to be numeric."
+        else:
+            if not qty.isnumeric() or int(qty) <= 0:
+                error = "Quantity is required to be a positive integer."
 
         if error is not None:
             flash(error)
         else:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=namedtuple_row) as cur:
-                    cur.execute(
+                    product_exists = cur.execute(
                         """
-                        INSERT INTO contains VALUES (%(order_no)s, %(sku)s, %(qty)s);
+                        SELECT COUNT(*) as product_exists
+                        FROM product
+                        WHERE SKU = %(sku)s;
                         """,
-                        {"order_no": order_no, "sku": sku, "qty": qty},
-                    )
+                        {"sku": sku},
+                    ).fetchone()
+                    if product_exists[0] == 0:
+                        error = "There isn't a product with that SKU."
+                        flash(error)
+                        return redirect(url_for("add_product", order_no=order_no))
+                    product_already_in_order = cur.execute(
+                        """
+                        SELECT COUNT(*) as product_already_in_order
+                        FROM contains
+                        WHERE SKU = %(sku)s AND order_no=%(order_no)s;
+                        """,
+                        {"sku": sku, "order_no": order_no},
+                    ).fetchone()
+                    if product_already_in_order[0] == 1:
+                        cur.execute(
+                            """
+                            UPDATE contains SET qty = qty + %(qty)s
+                            WHERE SKU = %(sku)s AND order_no=%(order_no)s;
+                            """,
+                            {"qty": qty, "sku": sku, "order_no": order_no},
+                        )
+                    else:
+                        cur.execute(
+                            """
+                            INSERT INTO contains VALUES (%(order_no)s, %(sku)s, %(qty)s);
+                            """,
+                            {"order_no": order_no, "sku": sku, "qty": qty},
+                        )
                 conn.commit()
-            return redirect(url_for("order_info"))
+            return redirect(url_for("order_info", order_no=order_no))
 
-    return render_template("orders/addproduct.html")
+    return render_template("orders/addproduct.html", order_no=order_no)
 
 
 @app.route("/orders/<order_no>/update", methods=("GET", ))
@@ -703,7 +770,7 @@ def pay_order(order_no):
             ).fetchone()
             order_totals = cur.execute(
                 """
-                SELECT COUNT(*) as total_products, SUM(qty*price) as total_price
+                SELECT COUNT(*) as total_products, SUM(qty) as total_qty, SUM(qty*price) as total_price
                 FROM contains JOIN product USING (SKU)
                 WHERE order_no = %(order_no)s;
                 """,
@@ -711,10 +778,10 @@ def pay_order(order_no):
             ).fetchone()
             log.debug(f"Found {cur.rowcount} rows.")
 
-    if payed == 1:
+    if payed[0] == 1:
         error = "Order is already payed."
         flash(error)
-        return redirect(url_for("order_info"))
+        return redirect(url_for("order_info", order_no=order_no))
 
     if request.method == "POST":
         error = None
@@ -722,12 +789,14 @@ def pay_order(order_no):
         payment_method = request.form["payment_method"]
         if not payment_method:
             error = "Payment method is required."
+        else:
             if payment_method not in ("MBWay", "Multibanco", "Paypal", "Visa"):
                 error = "Payment method is required to be one of those listed."
 
         cust_no_pay = request.form["cust_no_pay"]
         if not cust_no_pay:
             error = "The number of the customer who is going to pay is required."
+        else:
             if not cust_no_pay.isnumeric():
                 error = "Customer number is required to be an integer."
 
@@ -743,7 +812,7 @@ def pay_order(order_no):
                         """,
                         {"order_no": order_no},
                     ).fetchone()
-                    if cust_no_order["cust_no"] == cust_no_pay:
+                    if cust_no_order[0] == int(cust_no_pay):
                         cur.execute(
                             """
                             INSERT INTO pay VALUES (%(order_no)s, %(cust_no)s);
@@ -754,9 +823,9 @@ def pay_order(order_no):
                         error = "An order must be payed by the client who placed it."
                         flash(error)
                 conn.commit()
-            return redirect(url_for("order_info"))
+            return redirect(url_for("order_info", order_no=order_no))
 
-    return render_template("orders/pay.html", order_totals=order_totals)
+    return render_template("orders/pay.html", order_totals=order_totals, order_no=order_no)
 
 
 if __name__ == "__main__":
