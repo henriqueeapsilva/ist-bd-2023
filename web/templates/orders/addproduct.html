@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Add Product{% endblock %}</h1>
+  <h2>{% block title %}Add Product{% endblock %}</h2>
   <div class="main">
     <button onclick="window.location.href='{{ url_for('order_info', order_no=order_no) }}'" class="top-left"> Back</button>
 </div>  
