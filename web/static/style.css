@@ -32,6 +32,8 @@ nav {
     padding: 0 0.5rem;
 }
 
+
+
 nav h1 {
     flex: auto;
     margin: 1;
@@ -166,33 +168,28 @@ button{
   position: absolute; 
   font-weight: bold; width: 10%; 
   height: 90%;
+}
 
-} 
+button:hover {
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    transition: 0.7s;
+}
+
+.button:hover {
+    background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    transition: 0.7s;
+}
+
 .top-left { 
   top: 0%; 
-  left: 0%; } 
-.top-center{ 
-  top: 0%; left: 50%; 
-  transform: translate(-50%); } 
+  left: 0%; border-radius: 5px; } 
 .top-right{ 
   top: 0%; right: 0%; width: 20%; background-color: #377ba8; color: #ffffff; border-radius: 5px; } 
-.center-left{ 
-  top: 50%; transform: 
-  translateY(-50%); } 
-.center-center{ 
-  top: 50%; left: 50%; 
-  transform: translate(-50%, -50%); } 
-.center-right{ 
-  right: 0%; 
-  bottom: 45%; } 
 .bottom-left{
   bottom: 0%; 
   left: 0%; 
     width: 20%; background-color: #377ba8; color: #ffffff; border-radius: 5px;} 
 .bottom-center{ 
   bottom: 0%; 
-  left: 50%; transform: translate(-50%); 
+  left: 50%; transform: translate(-50%);
   width: 20%; background-color: green; color: #ffffff; border-radius: 5px;} 
-.bottom-right{ 
-  bottom: 0%; 
-  right: 0%; }

@@ -568,7 +568,7 @@ def place_order():
         if not cust_no:
             error = "Customer number is required."
         else:
-            if not cust_no.isnumeric() or int:
+            if not cust_no.isnumeric():
                 error = "Customer number is required to be an integer."
 
         date = request.form["date"]
