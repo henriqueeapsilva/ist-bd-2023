@@ -4,13 +4,14 @@
   <h2>{% block title %}Main Menu{% endblock %}</h2>
 {% endblock %}
 
+
 {% block content %}
 <header>
-    <div class="main-menu">
-        <a class="button" href="{{ url_for('product_index') }}">Products</a>
-        <a class="button" href="{{ url_for('customer_index') }}">Customers</a>
-        <a class="button" href="{{ url_for('orders_index') }}">Orders</a>
-        <a class="button" href="{{ url_for('supplier_index') }}">Suppliers</a>
+    <div class="main-menu">        
+        <a class="button" href="{{ url_for('product_index',) }}"> <i class="material-icons">shopping_bag</i> Products</a>
+        <a class="button" href="{{ url_for('customer_index') }}"> <i class="material-icons">person</i> Customers</a>
+        <a class="button" href="{{ url_for('orders_index') }}"> <i class="material-icons">inventory</i>Orders</a>
+        <a class="button" href="{{ url_for('supplier_index') }}"> <i class="material-icons">local_shipping</i> Suppliers</a>
     </div>
 </header>
 {% endblock %}

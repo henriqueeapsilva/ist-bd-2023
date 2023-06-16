@@ -150,15 +150,22 @@ input[type=submit] {
     table-layout: fixed;
     background-color: #377ba8;
     color: white;
-    padding: 15px 32px;
+    padding: 15px 30px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
+    display: flex;
     font-size: 20px;
     margin: 30px;
     transition-duration: 0.3s;
     border-radius: 12px;
+    flex-direction: column;
+    align-items: center;
 }
+
+.button i {
+    margin-bottom: 10px;
+}
+
 .main {
   height: 30px; position: 
   relative;
@@ -177,13 +184,14 @@ button:hover {
 
 .button:hover {
     background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+    width: 41%;
     transition: 0.7s;
 }
 
 .top-left { 
   top: 0%; 
   left: 0%; border-radius: 5px; } 
-.top-right{ 
+.top-right{
   top: 0%; right: 0%; width: 20%; background-color: #377ba8; color: #ffffff; border-radius: 5px; } 
 .bottom-left{
   bottom: 0%; 
