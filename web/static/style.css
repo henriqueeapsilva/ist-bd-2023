@@ -126,7 +126,27 @@ nav ul li a, nav ul li span, header .action {
 }
 
 input.danger {
-    color: #cc2f2e;
+    color: #ffffff; bottom: 0%; 
+    left: 0%; border-radius: 5px;
+    background-color: #cc0202;
+    font-weight: bold;
+}
+
+input.save {
+    color: #ffffff; bottom: 0%; 
+    left: 0%; border-radius: 5px;
+    background-color: #019432;
+    font-weight: bold;
+}
+
+input.danger:hover {
+    background-image: linear-gradient(rgb(0 0 0/25%) 0 0);
+    transition: 0.7s;
+}
+
+input.save:hover {
+    background-image: linear-gradient(rgb(0 0 0/25%) 0 0);
+    transition: 0.7s;
 }
 
 input[type=submit] {
@@ -172,9 +192,10 @@ input[type=submit] {
     margin-bottom: 10px;
 } 
 button{ 
-  position: absolute; 
-  font-weight: bold; width: 10%; 
-  height: 90%;
+    position: absolute; 
+    font-weight: bold; 
+    width: 10%; 
+    height: 90%;
 }
 
 button:hover {
@@ -195,8 +216,7 @@ button:hover {
   top: 0%; right: 0%; width: 20%; background-color: #377ba8; color: #ffffff; border-radius: 5px; } 
 .bottom-left{
   bottom: 0%; 
-  left: 0%; 
-    width: 20%; background-color: #377ba8; color: #ffffff; border-radius: 5px;} 
+  left: 0%; border-radius: 5px;} 
 .bottom-center{ 
   bottom: 0%; 
   left: 50%; transform: translate(-50%);
